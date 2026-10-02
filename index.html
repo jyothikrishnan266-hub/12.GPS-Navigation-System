@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Navigation System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>🗺️ GPS Navigation System</h1>
+    <p>Shortest Route Finder using Dijkstra's Algorithm</p>
+</header>
+
+<div class="container">
+
+    <!-- Dashboard -->
+    <section class="dashboard">
+        <div class="card">
+            <h3>📍 Locations</h3>
+            <span id="locationCount">0</span>
+        </div>
+
+        <div class="card">
+            <h3>🛣️ Roads</h3>
+            <span id="roadCount">0</span>
+        </div>
+
+        <div class="card">
+            <h3>📏 Total Road Distance</h3>
+            <span id="roadDistance">0 km</span>
+        </div>
+
+        <div class="card">
+            <h3>🧭 Navigations</h3>
+            <span id="navigationCount">0</span>
+        </div>
+    </section>
+
+    <!-- Add Location -->
+    <section class="panel">
+        <h2>📍 Add Location / Landmark</h2>
+
+        <div class="form-grid">
+            <input type="text" id="locationName" placeholder="Location name">
+            <input type="text" id="locationCity" placeholder="City">
+            
+            <select id="locationType">
+                <option value="Landmark">Landmark</option>
+                <option value="Hospital">Hospital</option>
+                <option value="College">College</option>
+                <option value="Airport">Airport</option>
+                <option value="Station">Station</option>
+                <option value="Shopping Mall">Shopping Mall</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <button onclick="addLocation()">Add Location</button>
+        </div>
+
+        <div id="locationMessage"></div>
+    </section>
+
+    <!-- Location Table -->
+    <section class="panel">
+        <h2>📍 Locations</h2>
+
+        <input 
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Search locations..."
+            onkeyup="searchLocations()"
+        >
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="locationTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Add Road -->
+    <section class="panel">
+        <h2>🛣️ Add Road</h2>
+
+        <div class="form-grid">
+            <select id="roadFrom"></select>
+            <select id="roadTo"></select>
+
+            <input 
+                type="number"
+                id="roadDistance"
+                placeholder="Distance (km)"
+                min="0.1"
+                step="0.1"
+            >
+
+            <input 
+                type="number"
+                id="roadSpeed"
+                placeholder="Speed (km/h)"
+                min="1"
+                value="40"
+            >
+
+            <select id="roadTraffic">
+                <option value="Low">🟢 Low Traffic</option>
+                <option value="Medium">🟡 Medium Traffic</option>
+                <option value="High">🔴 High Traffic</option>
+            </select>
+
+            <button onclick="addRoad()">Add Road</button>
+        </div>
+
+        <div id="roadMessage"></div>
+    </section>
+
+    <!-- Roads -->
+    <section class="panel">
+        <h2>🛣️ Road Network</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Distance</th>
+                        <th>Speed</th>
+                        <th>Traffic</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="roadTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="panel navigation-panel">
+        <h2>🗺️ Find Shortest Route</h2>
+
+        <div class="route-form">
+
+            <div>
+                <label>Starting Location</label>
+                <select id="startLocation"></select>
+            </div>
+
+            <div>
+                <label>Destination</label>
+                <select id="endLocation"></select>
+            </div>
+
+            <div>
+                <label>Fuel Efficiency (km/L)</label>
+                <input 
+                    type="number"
+                    id="fuelEfficiency"
+                    value="15"
+                    min="1"
+                >
+            </div>
+
+            <div>
+                <label>Fuel Price (₹/L)</label>
+                <input 
+                    type="number"
+                    id="fuelPrice"
+                    value="100"
+                    min="0"
+                >
+            </div>
+
+            <button onclick="findShortestRoute()">
+                ⚡ Find Route
+            </button>
+
+        </div>
+
+        <div id="routeResult"></div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="panel">
+        <h2>📊 Navigation Statistics</h2>
+
+        <div class="statistics">
+
+            <div>
+                <strong>Total Locations</strong>
+                <span id="statLocations">0</span>
+            </div>
+
+            <div>
+                <strong>Total Roads</strong>
+                <span id="statRoads">0</span>
+            </div>
+
+            <div>
+                <strong>Total Distance</strong>
+                <span id="statDistance">0 km</span>
+            </div>
+
+            <div>
+                <strong>Average Road Length</strong>
+                <span id="statAverage">0 km</span>
+            </div>
+
+            <div>
+                <strong>Shortest Navigation</strong>
+                <span id="statShortest">-</span>
+            </div>
+
+            <div>
+                <strong>Longest Navigation</strong>
+                <span id="statLongest">-</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Clear Data -->
+    <section class="panel danger-panel">
+        <button class="danger" onclick="clearAllData()">
+            🗑️ Clear All Data
+        </button>
+    </section>
+
+</div>
+
+<footer>
+    <p>GPS Navigation System | Dijkstra's Shortest Path Algorithm</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
